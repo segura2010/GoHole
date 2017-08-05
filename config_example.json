@@ -1,0 +1,14 @@
+{
+	"ServerIP": "0.0.0.0",
+	"DNSPort": "5353",
+
+	"UpstreamDNSServer":"8.8.8.8",
+
+	"DomainCacheTime": "300",
+
+	"RedisDB":{
+		"Host": "localhost",
+		"Port": "6379",
+		"Pass": ""
+	}
+}
