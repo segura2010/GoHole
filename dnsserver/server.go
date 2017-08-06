@@ -5,11 +5,13 @@ import (
 	"log"
 	"net"
 	"strings"
+	"time"
 
     "github.com/miekg/dns"
 
     "GoHole/config"
     "GoHole/dnscache"
+    "GoHole/logs"
 )
 
 func parseQuery(clientIp string, m *dns.Msg) {
@@ -21,6 +23,7 @@ func parseQuery(clientIp string, m *dns.Msg) {
 		var ip string = ""
 		cleanedName := q.Name[0:len(q.Name)-1] // remove the end "."
 		qType := "A"
+		cached := 0
 
 		if q.Qtype == dns.TypeA{
 			ip, err = dnscache.GetDomainIPv4(cleanedName)
@@ -34,6 +37,7 @@ func parseQuery(clientIp string, m *dns.Msg) {
 			if err == nil {
 				m.Answer = append(m.Answer, rr)
 			}
+			cached = 1
 		}else{
 			// Request to a DNS server
 			c := new(dns.Client)
@@ -65,7 +69,12 @@ func parseQuery(clientIp string, m *dns.Msg) {
 		    }
 		    // Set answer for the client
 		    m.Answer = r.Answer
+		    cached = 0
 		}
+
+		// Add logs
+		now := time.Now().Unix() * 1000
+		logs.AddQuery(clientIp, cleanedName, cached, now)
 	}
 }
 

@@ -3,11 +3,13 @@ package main
 import (
     "log"
     "flag"
+    "fmt"
 
     "GoHole/config"
     "GoHole/dnsserver"
     "GoHole/dnscache"
     "GoHole/parser"
+    "GoHole/logs"
 )
 
 
@@ -39,6 +41,18 @@ func main(){
     // example: gohole -abl /path/to/list_of_blacklists.txt
     blacklistslistFile := flag.String("abl", "", "Path to list of blacklists file (one list per line)")
 
+    // Show queries by client IP
+    // example: gohole -lip 127.0.0.1
+    listip := flag.String("lip", "", "Show queries by client IP")
+
+    // Show queries by domain
+    // example: gohole -ld 127.0.0.1
+    listdomain := flag.String("ld", "", "Show queries by domain")
+
+    // Flush queries log
+    // example: gohole -flog
+    flushLog := flag.Bool("flog", false, "Flush queries log")
+
     
     flag.Parse()
 
@@ -47,6 +61,7 @@ func main(){
     if *port != ""{
         config.GetInstance().DNSPort = *port
     }
+    logs.SetupDB() // prepare logs SQLiteDB
 
 
     if *domain != "" && *ipv4 != "" && *ipv6 != ""{
@@ -59,7 +74,6 @@ func main(){
             log.Printf("Error: %s", err)
         }
     }
-
     if *flushCache{
         err := dnscache.Flush()
         if err != nil{
@@ -72,9 +86,37 @@ func main(){
     if *blacklistFile != ""{
         parser.ParseBlacklistFile(*blacklistFile)
     }
-
     if *blacklistslistFile != ""{
         parser.ParseBlacklistsListFile(*blacklistslistFile)
+    }
+
+    if *listip != ""{
+        queries, err := logs.GetQueriesByClientIp(*listip)
+        if err != nil{
+            log.Printf("Error: %s", err)
+        }else{
+            for _, q := range queries{
+                fmt.Printf("\n%s requested %s at %d", q.ClientIp, q.Domain, q.Timestamp)
+            }
+        }
+    }
+    if *listdomain != ""{
+        queries, err := logs.GetQueriesByDomain(*listdomain)
+        if err != nil{
+            log.Printf("Error: %s", err)
+        }else{
+            for _, q := range queries{
+                fmt.Printf("\n%s requested %s at %d", q.ClientIp, q.Domain, q.Timestamp)
+            }
+        }
+    }
+    if *flushLog{
+        err := logs.Flush()
+        if err != nil{
+            log.Printf("Error: %s", err)
+        }else{
+            log.Printf("Query logs flushed!")
+        }
     }
 
     if *startDNS{

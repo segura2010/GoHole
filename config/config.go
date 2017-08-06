@@ -34,9 +34,9 @@ func CreateInstance(filename string) *MyConfig {
         // use defaults
         instance = &MyConfig{
             ServerIP: "0.0.0.0",
-            DNSPort: "5353",
+            DNSPort: "53",
             UpstreamDNSServer: "8.8.8.8",
-            DomainCacheTime: 300,
+            DomainCacheTime: 1800,
             RedisDB: RedisConfig{
                 Host: "localhost",
                 Port: "6379",
