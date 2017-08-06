@@ -19,6 +19,11 @@ type QueryLog struct {
     Timestamp int64
 }
 
+type ClientLog struct {
+    ClientIp string
+    Queries int
+}
+
 func GetInstance() *sql.DB {
     if instance == nil {
     	var err error = nil
@@ -116,6 +121,31 @@ func GetQueriesByDomain(domain string) ([]QueryLog, error){
 			Timestamp: timestamp,
 		}
 		result = append(result, l)
+	}
+	err = rows.Err()
+	return result, err
+}
+
+func GetClients() ([]ClientLog, error){
+	result := []ClientLog{}
+	rows, err := GetInstance().Query("select clientip, count(*) from queries GROUP BY clientip")
+	if err != nil {
+		return result, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var clientip string
+		var queries int
+		err = rows.Scan(&clientip, &queries)
+		if err != nil {
+			return result, err
+		}
+
+		c := ClientLog{
+			ClientIp: clientip,
+			Queries: queries,
+		}
+		result = append(result, c)
 	}
 	err = rows.Err()
 	return result, err

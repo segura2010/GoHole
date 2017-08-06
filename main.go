@@ -49,6 +49,10 @@ func main(){
     // example: gohole -ld 127.0.0.1
     listdomain := flag.String("ld", "", "Show queries by domain")
 
+    // Show clients
+    // example: gohole -lc
+    listclients := flag.Bool("lc", false, "Show clients")
+
     // Flush queries log
     // example: gohole -flog
     flushLog := flag.Bool("flog", false, "Flush queries log")
@@ -107,6 +111,16 @@ func main(){
         }else{
             for _, q := range queries{
                 fmt.Printf("\n%s requested %s at %d", q.ClientIp, q.Domain, q.Timestamp)
+            }
+        }
+    }
+    if *listclients{
+        clients, err := logs.GetClients()
+        if err != nil{
+            log.Printf("Error: %s", err)
+        }else{
+            for _, c := range clients{
+                fmt.Printf("\n%s\t\t(%d queries)", c.ClientIp, c.Queries)
             }
         }
     }
