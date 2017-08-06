@@ -3,8 +3,11 @@ package main
 import (
     "log"
     "flag"
-    "fmt"
     "time"
+    "os"
+    "strconv"
+
+    "github.com/olekukonko/tablewriter"
 
     "GoHole/config"
     "GoHole/dnsserver"
@@ -100,10 +103,13 @@ func main(){
         if err != nil{
             log.Printf("Error: %s", err)
         }else{
+            table := tablewriter.NewWriter(os.Stdout)
+            table.SetHeader([]string{"Client IP", "Domain", "Date"})
             for _, q := range queries{
                 toTime := time.Unix(q.Timestamp/1000, 0).Format(time.RFC1123)
-                fmt.Printf("\n%s requested %s at %s", q.ClientIp, q.Domain, toTime)
+                table.Append([]string{q.ClientIp, q.Domain, toTime})
             }
+            table.Render()
         }
     }
     if *listdomain != ""{
@@ -111,10 +117,13 @@ func main(){
         if err != nil{
             log.Printf("Error: %s", err)
         }else{
+            table := tablewriter.NewWriter(os.Stdout)
+            table.SetHeader([]string{"Client IP", "Domain", "Date"})
             for _, q := range queries{
                 toTime := time.Unix(q.Timestamp/1000, 0).Format(time.RFC1123)
-                fmt.Printf("\n%s requested %s at %s", q.ClientIp, q.Domain, toTime)
+                table.Append([]string{q.ClientIp, q.Domain, toTime})
             }
+            table.Render()
         }
     }
     if *listclients{
@@ -122,9 +131,12 @@ func main(){
         if err != nil{
             log.Printf("Error: %s", err)
         }else{
+            table := tablewriter.NewWriter(os.Stdout)
+            table.SetHeader([]string{"Client IP", "Num. Queries"})
             for _, c := range clients{
-                fmt.Printf("\n%s\t\t(%d queries)", c.ClientIp, c.Queries)
+                table.Append([]string{c.ClientIp, strconv.Itoa(c.Queries)})
             }
+            table.Render()
         }
     }
     if *flushLog{
