@@ -7,6 +7,7 @@ import (
     "GoHole/config"
     "GoHole/dnsserver"
     "GoHole/dnscache"
+    "GoHole/parser"
 )
 
 
@@ -28,6 +29,10 @@ func main(){
     // Flush Cache&Blacklist DB (RedisDB)
     // example: gohole -fcache
     flushCache := flag.Bool("fcache", false, "Domain")
+
+    // Parse blacklist of domains and add to the cache server
+    // example: gohole -ab
+    blacklistFile := flag.String("ab", "", "Path to blacklist file")
 
     
     flag.Parse()
@@ -57,6 +62,10 @@ func main(){
         }else{
             log.Printf("Cache flushed!")
         }
+    }
+
+    if *blacklistFile != ""{
+        parser.ParseBlacklistFile(*blacklistFile)
     }
 
     if *startDNS{
