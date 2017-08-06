@@ -31,8 +31,13 @@ func main(){
     flushCache := flag.Bool("fcache", false, "Domain")
 
     // Parse blacklist of domains and add to the cache server
-    // example: gohole -ab
+    // example: gohole -ab http://domain/path/to/list.txt
+    // example: gohole -ab /path/to/list.txt
     blacklistFile := flag.String("ab", "", "Path to blacklist file")
+
+    // Parse blacklist's list and add to the cache server
+    // example: gohole -abl /path/to/list_of_blacklists.txt
+    blacklistslistFile := flag.String("abl", "", "Path to list of blacklists file (one list per line)")
 
     
     flag.Parse()
@@ -66,6 +71,10 @@ func main(){
 
     if *blacklistFile != ""{
         parser.ParseBlacklistFile(*blacklistFile)
+    }
+
+    if *blacklistslistFile != ""{
+        parser.ParseBlacklistsListFile(*blacklistslistFile)
     }
 
     if *startDNS{

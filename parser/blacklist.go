@@ -77,3 +77,25 @@ func downloadFile(url string) (string, error) {
 
     return tmpfile.Name(), nil
 }
+
+func ParseBlacklistsListFile(path string) (error){
+    file, err := os.Open(path)
+    if err != nil {
+        return err
+    }
+    defer file.Close()
+
+    scanner := bufio.NewScanner(file)
+    for scanner.Scan() {
+        // read file line by line
+        line := scanner.Text()
+
+        // if starts with # it is a comment
+        if line != "" && line[0:1] != "#" {
+            ParseBlacklistFile(line)
+        }
+    }
+
+    return nil
+}
+
