@@ -4,6 +4,7 @@ import (
     "log"
     "flag"
     "fmt"
+    "time"
 
     "GoHole/config"
     "GoHole/dnsserver"
@@ -100,7 +101,8 @@ func main(){
             log.Printf("Error: %s", err)
         }else{
             for _, q := range queries{
-                fmt.Printf("\n%s requested %s at %d", q.ClientIp, q.Domain, q.Timestamp)
+                toTime := time.Unix(q.Timestamp/1000, 0).Format(time.RFC1123)
+                fmt.Printf("\n%s requested %s at %s", q.ClientIp, q.Domain, toTime)
             }
         }
     }
@@ -110,7 +112,8 @@ func main(){
             log.Printf("Error: %s", err)
         }else{
             for _, q := range queries{
-                fmt.Printf("\n%s requested %s at %d", q.ClientIp, q.Domain, q.Timestamp)
+                toTime := time.Unix(q.Timestamp/1000, 0).Format(time.RFC1123)
+                fmt.Printf("\n%s requested %s at %s", q.ClientIp, q.Domain, toTime)
             }
         }
     }
