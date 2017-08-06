@@ -2,6 +2,10 @@ BUILD=go build
 
 default: linux
 
+install:
+	@go install
+	@echo "Binary on ${GOPATH}/bin/gohole"
+
 clean:
 	@rm -rf bin/
 	@rm -f debug debug.test web/debug web/debug.test
