@@ -43,11 +43,14 @@ func AddDomainIPv4(domain, ip string, expiration int) (error){
 	if err != nil {
 		return err
 	}
+
 	// set expiration time (in seconds)
-	expDuration := time.Duration(expiration)*time.Second
-	err = GetInstance().Expire(IPv4Preffix() + domain, expDuration).Err()
-	if err != nil {
-		return err
+	if expiration > 0{
+		expDuration := time.Duration(expiration)*time.Second
+		err = GetInstance().Expire(IPv4Preffix() + domain, expDuration).Err()
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -58,11 +61,14 @@ func AddDomainIPv6(domain, ip string, expiration int) (error){
 	if err != nil {
 		return err
 	}
+
 	// set expiration time (in seconds)
-	expDuration := time.Duration(expiration)*time.Second
-	err = GetInstance().Expire(IPv6Preffix() + domain, expDuration).Err()
-	if err != nil {
-		return err
+	if expiration > 0{
+		expDuration := time.Duration(expiration)*time.Second
+		err = GetInstance().Expire(IPv6Preffix() + domain, expDuration).Err()
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -76,6 +82,10 @@ func GetDomainIPv4(domain string) (string, error){
 func GetDomainIPv6(domain string) (string, error){
 	ip, err := GetInstance().Get(IPv6Preffix() + domain).Result()
 	return ip, err
+}
+
+func Flush() (error){
+	return GetInstance().FlushDB().Err()
 }
 
 
