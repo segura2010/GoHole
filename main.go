@@ -64,7 +64,6 @@ func main(){
     
     flag.Parse()
 
-    log.Printf("Loading config..")
     config.CreateInstance(*cfgFile)
     if *port != ""{
         config.GetInstance().DNSPort = *port

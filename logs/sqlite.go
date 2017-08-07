@@ -2,6 +2,7 @@ package logs
 
 import (
 	"log"
+	"os/user"
 	"database/sql"
 
     _ "github.com/mattn/go-sqlite3"
@@ -27,7 +28,18 @@ type ClientLog struct {
 func GetInstance() *sql.DB {
     if instance == nil {
     	var err error = nil
-    	instance, err = sql.Open("sqlite3", "./gohole.db")
+    	var dbPath string = ""
+
+    	usr, err := user.Current()
+    	if err != nil{
+    		dbPath = "./gohole.db"
+    	}else{
+    		dbPath = usr.HomeDir + "/gohole.db"
+    	}
+
+    	log.Printf("Logs DB: %s", dbPath)
+
+    	instance, err = sql.Open("sqlite3", dbPath)
     	if err != nil{
     		log.Fatal(err)
     	}
