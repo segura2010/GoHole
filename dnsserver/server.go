@@ -73,7 +73,7 @@ func parseQuery(clientIp string, m *dns.Msg) {
 		}
 
 		// Add logs
-		now := time.Now().Unix() * 1000
+		now := time.Now().Unix()
 		logs.AddQuery(clientIp, cleanedName, cached, now)
 	}
 }

@@ -106,7 +106,7 @@ func main(){
             table := tablewriter.NewWriter(os.Stdout)
             table.SetHeader([]string{"Client IP", "Domain", "Date"})
             for _, q := range queries{
-                toTime := time.Unix(q.Timestamp/1000, 0).Format(time.RFC1123)
+                toTime := time.Unix(q.Timestamp, 0).Format(time.RFC1123)
                 table.Append([]string{q.ClientIp, q.Domain, toTime})
             }
             table.Render()
@@ -120,7 +120,7 @@ func main(){
             table := tablewriter.NewWriter(os.Stdout)
             table.SetHeader([]string{"Client IP", "Domain", "Date"})
             for _, q := range queries{
-                toTime := time.Unix(q.Timestamp/1000, 0).Format(time.RFC1123)
+                toTime := time.Unix(q.Timestamp, 0).Format(time.RFC1123)
                 table.Append([]string{q.ClientIp, q.Domain, toTime})
             }
             table.Render()
