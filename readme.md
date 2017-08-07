@@ -71,5 +71,21 @@ You can see the stats and logs by using the following command line arguments:
 
 `gohole -ld <clientip>`
 
+### Docker
+
+You can use GoHole in a Docker container. To do that, you can use the Docker image: https://hub.docker.com/r/segura2010/gohole/ running:
+
+`docker pull segura2010/gohole`
+
+Once you pull the Docker image, you can run a container using the command: 
+
+`docker run -d --name gohole -p 53:53/udp --restart=unless-stopped gohole/master`
+
+Then, you will have a Docker container running GoHole. But it does not install any blacklist (domains will not be blocked). In order to do that, you must open a shell in the container with:
+
+`docker exec -it gohole /bin/bash`
+
+After that, you can run `gohole -abl blacklists/list.txt` to set up the blocked domains.
+
 
 **Tested on Go 1.8.3**
