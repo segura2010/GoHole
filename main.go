@@ -5,6 +5,7 @@ import (
     "flag"
     "time"
     "os"
+    "os/exec"
     "strconv"
 
     "github.com/olekukonko/tablewriter"
@@ -25,6 +26,8 @@ func main(){
 
     // option to start the DNS server
     startDNS := flag.Bool("s", false, "Start DNS server")
+    // option to stop the DNS server
+    stopDNS := flag.Bool("stop", false, "Stop DNS server")
     
     // Add domain to blacklist by command line
     // example: gohole -ad google.com -ip4 0.0.0.0 -ip6 "::1"
@@ -149,6 +152,9 @@ func main(){
 
     if *startDNS{
         dnsserver.ListenAndServe()
+    }
+    if *stopDNS{
+        exec.Command("killall", os.Args[0]).Run()
     }
 
 }
