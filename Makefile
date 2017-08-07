@@ -4,6 +4,7 @@ default: linux
 
 install:
 	@go install
+	@mv ${GOPATH}/bin/GoHole ${GOPATH}/bin/gohole
 	@echo "Binary on ${GOPATH}/bin/gohole"
 
 clean:
