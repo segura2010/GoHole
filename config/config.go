@@ -3,6 +3,7 @@ package config
 import (
     "encoding/json"
     "io/ioutil"
+    "log"
 )
 
 // MyConfig struct
@@ -31,6 +32,7 @@ func CreateInstance(filename string) *MyConfig {
     var err error
     instance, err = loadConfig(filename)
     if err != nil {
+        log.Printf("Error loading config file: %s\nUsing default config.", err)
         // use defaults
         instance = &MyConfig{
             ServerIP: "0.0.0.0",

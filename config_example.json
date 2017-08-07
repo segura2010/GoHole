@@ -4,7 +4,7 @@
 
 	"UpstreamDNSServer":"8.8.8.8",
 
-	"DomainCacheTime": "1800",
+	"DomainCacheTime": 1800,
 
 	"RedisDB":{
 		"Host": "localhost",
