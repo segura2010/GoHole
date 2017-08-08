@@ -60,6 +60,8 @@ func main(){
     // example: gohole -lc
     listclients := flag.Bool("lc", false, "Show clients")
 
+    listLimit := flag.String("limit", "100", "Number of registers to show for arguments: -lip")
+
     // Flush queries log
     // example: gohole -flog
     flushLog := flag.Bool("flog", false, "Flush queries log")
@@ -101,7 +103,7 @@ func main(){
     }
 
     if *listip != ""{
-        queries, err := logs.GetQueriesByClientIp(*listip)
+        queries, err := logs.GetQueriesByClientIp(*listip, *listLimit)
         if err != nil{
             log.Printf("Error: %s", err)
         }else{

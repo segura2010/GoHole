@@ -80,9 +80,9 @@ func AddQuery(clientip, domain string, cached int, timestamp int64) (error){
 	return err
 }
 
-func GetQueriesByClientIp(clientIp string) ([]QueryLog, error){
+func GetQueriesByClientIp(clientIp, limit string) ([]QueryLog, error){
 	result := []QueryLog{}
-	rows, err := GetInstance().Query("select id, clientip, domain, cached, timestamp from queries where clientip='"+ clientIp +"'")
+	rows, err := GetInstance().Query("select id, clientip, domain, cached, timestamp from (select * from queries where clientip='"+ clientIp +"' ORDER BY timestamp DESC LIMIT "+ limit +") ORDER BY timestamp ASC")
 	if err != nil {
 		return result, err
 	}
@@ -111,7 +111,7 @@ func GetQueriesByClientIp(clientIp string) ([]QueryLog, error){
 
 func GetQueriesByDomain(domain string) ([]QueryLog, error){
 	result := []QueryLog{}
-	rows, err := GetInstance().Query("select id, clientip, domain, cached, timestamp from queries where domain LIKE '%"+ domain +"%'")
+	rows, err := GetInstance().Query("select id, clientip, domain, cached, timestamp from queries where domain LIKE '%"+ domain +"%' ORDER BY timestamp ASC")
 	if err != nil {
 		return result, err
 	}
@@ -140,7 +140,7 @@ func GetQueriesByDomain(domain string) ([]QueryLog, error){
 
 func GetClients() ([]ClientLog, error){
 	result := []ClientLog{}
-	rows, err := GetInstance().Query("select clientip, count(*) from queries GROUP BY clientip")
+	rows, err := GetInstance().Query("select clientip, count(*) AS numqueries from queries GROUP BY clientip ORDER BY numqueries DESC")
 	if err != nil {
 		return result, err
 	}
