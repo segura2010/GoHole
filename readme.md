@@ -38,6 +38,10 @@ You can also block domains by using the following command:
 
 `gohole -ad google.com -ip4 0.0.0.0 -ip6 "::1"`
 
+and unblock domains by using the following command:
+
+`gohole -dd google.com`
+
 #### Flush cache and logs
 
 You can flush cache and logs DBs.
