@@ -31,9 +31,13 @@ func main(){
     
     // Add domain to blacklist by command line
     // example: gohole -ad google.com -ip4 0.0.0.0 -ip6 "::1"
-    domain := flag.String("ad", "", "Domain")
+    domainAdd := flag.String("ad", "", "Domain to add")
     ipv4 := flag.String("ip4", "", "IPv4 Address for the domain")
     ipv6 := flag.String("ip6", "", "IPv6 Address for the domain")
+
+    // Delete domain from blacklist/cache by command line
+    // example: gohole -dd google.com
+    domainDelete := flag.String("dd", "", "Domain to delete")
 
     // Flush Cache&Blacklist DB (RedisDB)
     // example: gohole -fcache
@@ -76,12 +80,22 @@ func main(){
     logs.SetupDB() // prepare logs SQLiteDB
 
 
-    if *domain != "" && *ipv4 != "" && *ipv6 != ""{
-        err := dnscache.AddDomainIPv4(*domain, *ipv4, 0)
+    if *domainAdd != "" && *ipv4 != "" && *ipv6 != ""{
+        err := dnscache.AddDomainIPv4(*domainAdd, *ipv4, 0)
         if err != nil{
             log.Printf("Error: %s", err)
         }
-        err = dnscache.AddDomainIPv6(*domain, *ipv6, 0)
+        err = dnscache.AddDomainIPv6(*domainAdd, *ipv6, 0)
+        if err != nil{
+            log.Printf("Error: %s", err)
+        }
+    }
+    if *domainDelete != ""{
+        err := dnscache.DeleteDomainIPv4(*domainDelete)
+        if err != nil{
+            log.Printf("Error: %s", err)
+        }
+        err = dnscache.DeleteDomainIPv6(*domainDelete)
         if err != nil{
             log.Printf("Error: %s", err)
         }

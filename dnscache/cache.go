@@ -74,6 +74,24 @@ func AddDomainIPv6(domain, ip string, expiration int) (error){
 	return nil
 }
 
+func DeleteDomainIPv4(domain string) (error){
+	err := GetInstance().Del(IPv4Preffix() + domain).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DeleteDomainIPv6(domain string) (error){
+	err := GetInstance().Del(IPv6Preffix() + domain).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func GetDomainIPv4(domain string) (string, error){
 	ip, err := GetInstance().Get(IPv4Preffix() + domain).Result()
 	return ip, err
