@@ -102,6 +102,16 @@ func GetDomainIPv6(domain string) (string, error){
 	return ip, err
 }
 
+func GetTTLDomainIPv4(domain string) (int64, error){
+	t, err := GetInstance().TTL(IPv4Preffix() + domain).Result()
+	return int64(t), err
+}
+
+func GetTTLDomainIPv6(domain string) (int64, error){
+	t, err := GetInstance().TTL(IPv6Preffix() + domain).Result()
+	return int64(t), err
+}
+
 func Flush() (error){
 	return GetInstance().FlushDB().Err()
 }

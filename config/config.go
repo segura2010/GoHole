@@ -15,6 +15,9 @@ type MyConfig struct {
     // RedisDB info
     RedisDB RedisConfig
 
+    // Graphite info
+    Graphite GraphiteConfig
+
     UpstreamDNSServer string
     DomainCacheTime int // time to save domains in cache (in seconds)
 }
@@ -24,6 +27,12 @@ type RedisConfig struct {
     Host string
     Port string
     Pass string
+}
+
+// Graphite Config
+type GraphiteConfig struct {
+    Host string
+    Port int
 }
 
 var instance *MyConfig = nil
@@ -43,6 +52,10 @@ func CreateInstance(filename string) *MyConfig {
                 Host: "localhost",
                 Port: "6379",
                 Pass: "",
+            },
+            Graphite: GraphiteConfig{
+                Host: "localhost",
+                Port: 2003,
             },
         }
     }

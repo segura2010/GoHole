@@ -10,5 +10,10 @@
 		"Host": "localhost",
 		"Port": "6379",
 		"Pass": ""
+	},
+
+	"Graphite":{
+		"Host": "localhost",
+		"Port": 2003
 	}
 }

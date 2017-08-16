@@ -24,12 +24,17 @@ func parseQuery(clientIp string, m *dns.Msg) {
 		cleanedName := q.Name[0:len(q.Name)-1] // remove the end "."
 		qType := "A"
 		cached := 0
+		var cacheTTL int64 = 1
+		isIpv4 := true
 
 		if q.Qtype == dns.TypeA{
 			ip, err = dnscache.GetDomainIPv4(cleanedName)
+			cacheTTL, _ = dnscache.GetTTLDomainIPv4(cleanedName)
 		}else if q.Qtype == dns.TypeAAAA{
 			ip, err = dnscache.GetDomainIPv6(cleanedName)
+			cacheTTL, _ = dnscache.GetTTLDomainIPv6(cleanedName)
 			qType = "AAAA"
+			isIpv4 = false
 		}
 
 		if ip != "" && err == nil {
@@ -75,6 +80,17 @@ func parseQuery(clientIp string, m *dns.Msg) {
 		// Add logs
 		now := time.Now().Unix()
 		logs.AddQuery(clientIp, cleanedName, cached, now)
+		
+		isBlocked := false
+		isCached := true
+		if cacheTTL > 0{
+			// is a blocked domain
+			isBlocked = true
+		}
+		if cached == 0{
+			isCached = false
+		}
+		go logs.AddQueryToGraphite(isBlocked, isIpv4, isCached)
 	}
 }
 
@@ -94,6 +110,9 @@ func handleDnsRequest(w dns.ResponseWriter, r *dns.Msg) {
 }
 
 func ListenAndServe(){
+
+	// add go.hole domain to our cache :)
+	dnscache.AddDomainIPv4("go.hole", config.GetInstance().ServerIP, 0)
 
 	dns.HandleFunc(".", handleDnsRequest)
 
