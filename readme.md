@@ -91,5 +91,15 @@ Then, you will have a Docker container running GoHole. But it does not install a
 
 After that, you can run `gohole -abl blacklists/list.txt` to set up the blocked domains.
 
+### Metrics & Statistics on Graphite
+
+You can send the statistics to your Graphite server. Configure it on your config file (host and port of the server). Then, you will be able to see your graphs in the Graphite web panel or in Grafana.
+
+![Grafana Dashboard](http://i.imgur.com/6eK98At.png)
+
+You can export the Grafana dashboard I used in the image using the [grafana/GoHole.json](https://github.com/segura2010/GoHole/tree/master/grafana/GoHole.json) file.
+
+You can use the Graphite+Grafana Docker image from: https://github.com/kamon-io/docker-grafana-graphite
+
 
 **Tested on Go 1.8.3**

@@ -1,0 +1,466 @@
+{
+  "id": 5,
+  "title": "GoHole",
+  "originalTitle": "GoHole",
+  "tags": [],
+  "style": "dark",
+  "timezone": "browser",
+  "editable": true,
+  "hideControls": false,
+  "sharedCrosshair": false,
+  "rows": [
+    {
+      "title": "New row",
+      "height": "100px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "Last 24 hours",
+          "error": false,
+          "span": 12,
+          "editable": true,
+          "type": "table",
+          "isNew": true,
+          "id": 5,
+          "targets": [
+            {
+              "target": "alias(summarize(gohole.queries.total, '24h', 'sum', true), 'Total Queries')",
+              "refId": "A"
+            },
+            {
+              "target": "alias(asPercent(summarize(gohole.queries.blocked, '24h', 'sum', true), #A), '% Blocked queries')",
+              "refId": "B"
+            },
+            {
+              "target": "alias(asPercent(summarize(gohole.queries.nonblocked, '24h', 'sum', true), #A), '% Non-Blocked queries')",
+              "refId": "C"
+            },
+            {
+              "target": "alias(asPercent(summarize(gohole.queries.cached, '24h', 'sum', true), #A), '% Cached queries')",
+              "refId": "D"
+            },
+            {
+              "target": "alias(asPercent(summarize(gohole.queries.noncached, '24h', 'sum', true), #A), '% Non-Cached queries')",
+              "refId": "E"
+            }
+          ],
+          "styles": [
+            {
+              "type": "date",
+              "pattern": "Time",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss"
+            },
+            {
+              "unit": "short",
+              "type": "number",
+              "decimals": 2,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "colorMode": null,
+              "pattern": "/.*/",
+              "thresholds": []
+            }
+          ],
+          "transform": "timeseries_to_columns",
+          "pageSize": null,
+          "showHeader": true,
+          "columns": [],
+          "scroll": true,
+          "fontSize": "100%",
+          "sort": {
+            "col": null,
+            "desc": false
+          },
+          "links": []
+        }
+      ]
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 1,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "summarize(gohole.queries.*, '10m', 'sum', true)"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "All Queries",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "showTitle": false,
+      "title": "gohole.queries.bloked"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {
+            "summarize(gohole.queries.blocked, \"10min\", \"sum\")": "#E24D42",
+            "summarize(gohole.queries.nonblocked, \"10min\", \"sum\")": "#1F78C1",
+            "Blocked": "#E24D42",
+            "Non-Blocked": "#1F78C1"
+          },
+          "bars": false,
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 2,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(summarize(gohole.queries.blocked, '10m', 'sum', true), 'Blocked')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(summarize(gohole.queries.nonblocked, '10m', 'sum', true), 'Non-Blocked')"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Blocked vs Non-Blocked",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {
+            "summarize(gohole.queries.cached, \"10min\", \"sum\")": "#1F78C1",
+            "summarize(gohole.queries.noncached, \"10min\", \"sum\")": "#E24D42",
+            "Cached": "#1F78C1",
+            "Non-Cached": "#E24D42"
+          },
+          "bars": false,
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 3,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 6,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(summarize(gohole.queries.cached, '10m', 'sum', true), 'Cached')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(summarize(gohole.queries.noncached, '10m', 'sum', true), 'Non-Cached')"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Cached vs Non-Cached",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {
+            "summarize(gohole.queries.ipv4, \"10min\", \"sum\")": "#1F78C1",
+            "summarize(gohole.queries.ipv6, \"10min\", \"sum\")": "#E24D42",
+            "IPv4": "#1F78C1",
+            "IPv6": "#E24D42"
+          },
+          "bars": false,
+          "datasource": null,
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 4,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(summarize(gohole.queries.ipv4, '10m', 'sum', true), 'IPv4')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(summarize(gohole.queries.ipv6, '10m', 'sum', true), 'IPv6')"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "IPv4 vs IPv6",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
+        }
+      ],
+      "title": "New row"
+    }
+  ],
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "refresh": "10s",
+  "schemaVersion": 12,
+  "version": 11,
+  "links": []
+}
