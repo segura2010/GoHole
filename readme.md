@@ -71,9 +71,9 @@ You can see the stats and logs by using the following command line arguments:
 
 `gohole -ld <clientip>`
 
-**See all clients that queried a domain**
+**See top domains and number of queries for them**
 
-`gohole -ld <clientip>`
+`gohole -ldt -limit 10`
 
 ### Docker
 
