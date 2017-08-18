@@ -60,6 +60,10 @@ func main(){
     // example: gohole -ld 127.0.0.1
     listdomain := flag.String("ld", "", "Show queries by domain")
 
+    // Show top domain queries
+    // example: gohole -ldt -limit 10
+    listdomaintop := flag.Bool("ldt", false, "Show top domain queries")
+
     // Show clients
     // example: gohole -lc
     listclients := flag.Bool("lc", false, "Show clients")
@@ -140,6 +144,19 @@ func main(){
             for _, q := range queries{
                 toTime := time.Unix(q.Timestamp, 0).Format(time.RFC1123)
                 table.Append([]string{q.ClientIp, q.Domain, toTime})
+            }
+            table.Render()
+        }
+    }
+    if *listdomaintop{
+        domains, err := logs.GetTopDomains(*listLimit)
+        if err != nil{
+            log.Printf("Error: %s", err)
+        }else{
+            table := tablewriter.NewWriter(os.Stdout)
+            table.SetHeader([]string{"Domain", "Num. Queries"})
+            for _, c := range domains{
+                table.Append([]string{c.Domain, strconv.Itoa(c.Queries)})
             }
             table.Render()
         }

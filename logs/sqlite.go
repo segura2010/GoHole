@@ -25,6 +25,11 @@ type ClientLog struct {
     Queries int
 }
 
+type DomainLog struct {
+    Domain string
+    Queries int
+}
+
 func GetInstance() *sql.DB {
     if instance == nil {
     	var err error = nil
@@ -155,6 +160,31 @@ func GetClients() ([]ClientLog, error){
 
 		c := ClientLog{
 			ClientIp: clientip,
+			Queries: queries,
+		}
+		result = append(result, c)
+	}
+	err = rows.Err()
+	return result, err
+}
+
+func GetTopDomains(limit string) ([]DomainLog, error){
+	result := []DomainLog{}
+	rows, err := GetInstance().Query("select domain, count(*) AS numqueries from queries GROUP BY domain ORDER BY numqueries DESC LIMIT "+ limit)
+	if err != nil {
+		return result, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var domain string
+		var queries int
+		err = rows.Scan(&domain, &queries)
+		if err != nil {
+			return result, err
+		}
+
+		c := DomainLog{
+			Domain: domain,
 			Queries: queries,
 		}
 		result = append(result, c)
