@@ -7,6 +7,7 @@ import (
     "os"
     "os/exec"
     "strconv"
+    "fmt"
 
     "github.com/olekukonko/tablewriter"
 
@@ -17,12 +18,29 @@ import (
     "GoHole/logs"
 )
 
+/* Update version number on each release:
+    Given a version number x.y.z, increment the:
+
+    x - major release
+    y - minor release
+    z - build number
+*/
+const GOHOLE_VERSION = "1.0.0"
+var Commit string
+var CompilationDate string
+
+func showVersionInfo(){
+    fmt.Println("----------------------------------------")
+    fmt.Printf("GoHole v%s\nCommit: %s\nCompilation date: %s\n", GOHOLE_VERSION, Commit, CompilationDate)
+    fmt.Println("----------------------------------------")
+}
 
 func main(){
 
     // Command line options
     port := flag.String("p", "", "Set DNS server port")
     cfgFile := flag.String("c", "./config.json", "Config file")
+    version := flag.Bool("v", false, "Show current GoHole version")
 
     // option to start the DNS server
     startDNS := flag.Bool("s", false, "Start DNS server")
@@ -83,6 +101,9 @@ func main(){
     }
     logs.SetupDB() // prepare logs SQLiteDB
 
+    if *version{
+        showVersionInfo()
+    }
 
     if *domainAdd != "" && *ipv4 != "" && *ipv6 != ""{
         err := dnscache.AddDomainIPv4(*domainAdd, *ipv4, 0)
