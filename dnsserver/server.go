@@ -83,7 +83,7 @@ func parseQuery(clientIp string, m *dns.Msg) {
 		
 		isBlocked := false
 		isCached := true
-		if cacheTTL > 0{
+		if cacheTTL < 0{
 			// is a blocked domain
 			isBlocked = true
 		}
