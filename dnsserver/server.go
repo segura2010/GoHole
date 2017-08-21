@@ -83,12 +83,14 @@ func parseQuery(clientIp string, m *dns.Msg) {
 		
 		isBlocked := false
 		isCached := true
-		if cacheTTL < 0{
-			// is a blocked domain
-			isBlocked = true
-		}
 		if cached == 0{
 			isCached = false
+		}else{
+			// if it was cached and TTL is -1 (<0), then it is a blocked domain
+			if cacheTTL < 0{
+				// is a blocked domain
+				isBlocked = true
+			}
 		}
 		go logs.AddQueryToGraphite(isBlocked, isIpv4, isCached)
 	}
