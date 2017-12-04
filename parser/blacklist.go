@@ -48,7 +48,12 @@ func ParseBlacklistFile(path string) (error){
             }
             
             if parsedLine[1] != "localhost"{
+                // clean domain and save it on block list
+                parsedLine[1] = strings.Replace(parsedLine[1], " ", "", -1)
+                parsedLine[1] = strings.Replace(parsedLine[1], "\t", "", -1)
+
                 fmt.Printf("\nDomain %s blocked with %s", parsedLine[1], parsedLine[0])
+
                 dnscache.AddDomainIPv4(parsedLine[1], parsedLine[0], 0)
                 dnscache.AddDomainIPv6(parsedLine[1], "::1", 0) // by default ad lists doesn't include ipv6 block..
             }
