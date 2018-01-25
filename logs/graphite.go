@@ -27,7 +27,8 @@ func getGraphiteInstance() *graphite.Graphite {
 	instance, err := graphite.NewGraphite(host, port)
 
 	if err != nil {
-		instance = graphite.NewGraphiteNop(host, port)
+		//instance = graphite.NewGraphiteNop(host, port)
+		instance = nil
 	}
 
     return instance
@@ -91,6 +92,9 @@ func sendQueriesToGraphite(){
 
 	stats := getStatsInstance()
 	Graphite := getGraphiteInstance()
+	if Graphite == nil{
+		return
+	}
 
 	// add query to total query metric
 	Graphite.SimpleSend("gohole.queries.total", strconv.Itoa(stats.Total))
