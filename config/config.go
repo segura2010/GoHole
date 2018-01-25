@@ -11,6 +11,8 @@ import (
 type MyConfig struct {
     ServerIP string // the DNS server IP to redirect blocked ads
     DNSPort string // listen on port
+    SecureDNSPort string // listen port for encrypted DNS Server
+    EncryptionKey string // Path to the encryption key file
 
     // RedisDB info
     RedisDB RedisConfig
@@ -46,6 +48,8 @@ func CreateInstance(filename string) *MyConfig {
         instance = &MyConfig{
             ServerIP: "0.0.0.0",
             DNSPort: "53",
+            SecureDNSPort: "443",
+            EncryptionKey: "enc.key",
             UpstreamDNSServer: "8.8.8.8",
             DomainCacheTime: 1800,
             RedisDB: RedisConfig{

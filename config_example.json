@@ -1,6 +1,8 @@
 {
 	"ServerIP": "0.0.0.0",
 	"DNSPort": "53",
+	"SecureDNSPort": "443",
+	"EncryptionKey": "enc.key",
 
 	"UpstreamDNSServer":"8.8.8.8",
 

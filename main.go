@@ -16,6 +16,7 @@ import (
     "GoHole/dnscache"
     "GoHole/parser"
     "GoHole/logs"
+    "GoHole/encryption"
 )
 
 /* Update version number on each release:
@@ -25,7 +26,7 @@ import (
     y - minor release
     z - build number
 */
-const GOHOLE_VERSION = "1.0.0"
+const GOHOLE_VERSION = "1.1.0"
 var Commit string
 var CompilationDate string
 
@@ -59,7 +60,7 @@ func main(){
 
     // Flush Cache&Blacklist DB (RedisDB)
     // example: gohole -fcache
-    flushCache := flag.Bool("fcache", false, "Domain")
+    flushCache := flag.Bool("fcache", false, "Flush domain cache")
 
     // Parse blacklist of domains and add to the cache server
     // example: gohole -ab http://domain/path/to/list.txt
@@ -92,6 +93,10 @@ func main(){
     // example: gohole -flog
     flushLog := flag.Bool("flog", false, "Flush queries log")
 
+    // Generate Encryption Key
+    // example: gohole -gkey
+    gkey := flag.Bool("gkey", false, "Generate encryption key and export in 'enc.key' file")
+
     
     flag.Parse()
 
@@ -100,6 +105,17 @@ func main(){
         config.GetInstance().DNSPort = *port
     }
     logs.SetupDB() // prepare logs SQLiteDB
+
+    encryption.CreateInstance()
+    if *gkey{
+        k, err := encryption.GenerateRandomKey()
+        if err != nil{
+            log.Printf("Error generating key: %s", err)
+            return
+        }
+        encryption.ExportKeyToFile(k, "enc.key")
+    }
+    encryption.ImportKeyFromFile(config.GetInstance().EncryptionKey)
 
     if *version{
         showVersionInfo()

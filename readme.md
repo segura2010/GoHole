@@ -18,9 +18,11 @@ To start the DNS server you have to run the following command:
 
 `gohole -s`
 
-You can specify a config file with the command line argument `-c`. See the `config_example.json` file to see the structure.
+You can specify a config file with the command line argument `-c`. See the `config_example.json` file to see the structure. 
 
 You can also provide the `-p` argument to specify the port in which the DNS server will listen.
+
+You can use the secure DNS server generating an AES encryption key using the command "gohole -gkey". Then, download it in your device and configure the [GoHole CryptClient](https://github.com/segura2010/GoHole-CryptClient).
 
 To block ads domains, you must add them to the cache DB. In order to do that, you must pass a blocklist file using the following command:
 
@@ -102,4 +104,4 @@ You can export the Grafana dashboard I used in the image using the [grafana/GoHo
 You can use the Graphite+Grafana Docker image from: https://github.com/kamon-io/docker-grafana-graphite
 
 
-**Tested on Go 1.8.3**
+**Tested on Go 1.8.3 and 1.9.2**

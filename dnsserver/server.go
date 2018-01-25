@@ -12,6 +12,7 @@ import (
     "GoHole/config"
     "GoHole/dnscache"
     "GoHole/logs"
+    "GoHole/encryption"
 )
 
 func parseQuery(clientIp string, m *dns.Msg) {
@@ -111,6 +112,51 @@ func handleDnsRequest(w dns.ResponseWriter, r *dns.Msg) {
 	w.WriteMsg(m)
 }
 
+func listenAndServeSecure(){
+	serveraddr, err := net.ResolveUDPAddr("udp",":"+ config.GetInstance().SecureDNSPort)
+	if err != nil {
+		log.Fatal("Failed to start DNS Secure Server: %s\n", err)
+	}
+	conn, err := net.ListenUDP("udp", serveraddr)
+	if err != nil {
+		log.Fatal("Failed to start DNS Secure Server: %s\n", err)
+	}
+	defer conn.Close()
+
+	log.Printf("Starting Secure DNS Server at %s\n", config.GetInstance().SecureDNSPort)
+
+	//simple read
+	for{
+		buf := make([]byte, 2048)
+		n, addr, err := conn.ReadFromUDP(buf)
+        if err != nil {
+            continue
+        }
+
+        query, err := encryption.Decrypt(buf[:n])
+        if err != nil{
+        	continue
+        }
+
+        m := new(dns.Msg)
+        m.Unpack(query)
+        clientIp := addr.String()
+        clientIp = clientIp[0:strings.LastIndex(clientIp, ":")] // remove port
+        parseQuery(clientIp, m)
+
+        reply, err := m.Pack()
+        if err != nil{
+        	continue
+        }
+        eReply, err := encryption.Encrypt(reply)
+        if err != nil{
+        	continue
+        }
+
+        conn.WriteToUDP(eReply, addr)
+	}
+}
+
 func ListenAndServe(){
 
 	// add go.hole domain to our cache :)
@@ -126,6 +172,7 @@ func ListenAndServe(){
 	server := &dns.Server{Addr: ":" + port, Net: "udp"}
 
 	log.Printf("Starting at %s\n", port)
+	go listenAndServeSecure()
 
 	err := server.ListenAndServe()
 	defer server.Shutdown()
