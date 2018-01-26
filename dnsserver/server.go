@@ -112,6 +112,30 @@ func handleDnsRequest(w dns.ResponseWriter, r *dns.Msg) {
 	w.WriteMsg(m)
 }
 
+func handleSecureDnsRequest(conn *net.UDPConn, buf []byte, addr net.UDPAddr){
+	query, err := encryption.Decrypt(buf)
+    if err != nil{
+    	return
+    }
+
+    m := new(dns.Msg)
+    m.Unpack(query)
+    clientIp := addr.String()
+    clientIp = clientIp[0:strings.LastIndex(clientIp, ":")] // remove port
+    parseQuery(clientIp, m)
+
+    reply, err := m.Pack()
+    if err != nil{
+    	return
+    }
+    eReply, err := encryption.Encrypt(reply)
+    if err != nil{
+    	return
+    }
+
+    conn.WriteToUDP(eReply, &addr)
+}
+
 func listenAndServeSecure(){
 	serveraddr, err := net.ResolveUDPAddr("udp",":"+ config.GetInstance().SecureDNSPort)
 	if err != nil {
@@ -133,27 +157,7 @@ func listenAndServeSecure(){
             continue
         }
 
-        query, err := encryption.Decrypt(buf[:n])
-        if err != nil{
-        	continue
-        }
-
-        m := new(dns.Msg)
-        m.Unpack(query)
-        clientIp := addr.String()
-        clientIp = clientIp[0:strings.LastIndex(clientIp, ":")] // remove port
-        parseQuery(clientIp, m)
-
-        reply, err := m.Pack()
-        if err != nil{
-        	continue
-        }
-        eReply, err := encryption.Encrypt(reply)
-        if err != nil{
-        	continue
-        }
-
-        conn.WriteToUDP(eReply, addr)
+        go handleSecureDnsRequest(conn, buf[:n], *addr)
 	}
 }
 
