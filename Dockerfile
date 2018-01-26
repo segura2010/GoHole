@@ -47,6 +47,7 @@ RUN make install
 RUN cp config_example.json /root/gohole_config.json
 
 EXPOSE 53 53/udp
+EXPOSE 443 443/udp
 
 RUN chmod +x docker/init.sh
 ENTRYPOINT docker/init.sh
