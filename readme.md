@@ -32,6 +32,9 @@ If the list is published in a web server, you can provide the URL:
 
 `gohole -ab http://domain/path/to/blacklist_file`
 
+You can follow this link to get an updated list of available block content:
+https://github.com/StevenBlack/hosts
+
 If you does not know any blacklist, you can see the file `blacklists/list.txt`. It contains the blacklists used by the PiHole. You can use a file with a list of blacklist like the `blacklists/list.txt` file to automatically add all the lists:
 
 `gohole -abl blacklists/list.txt`
